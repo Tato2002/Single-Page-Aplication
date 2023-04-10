@@ -1,0 +1,158 @@
+
+
+<style>
+    .products{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    .card {
+        width: 320px;
+        height: 460px;
+        box-shadow: 3px 3px 15px grey;
+        text-align: center;
+    }
+
+    .card img {
+        width: 100%;
+        height: 200px;
+        object-fit: contain;
+    }
+    /* h1 {
+        margin-bottom: 100px;
+    } */
+/* loader */
+.lds-ellipsis {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-ellipsis div {
+  position: absolute;
+  top: 33px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #111010;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.lds-ellipsis div:nth-child(1) {
+  left: 8px;
+  animation: lds-ellipsis1 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+  left: 8px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+  left: 32px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+  left: 56px;
+  animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(24px, 0);
+  }
+}
+
+.loader {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+</style>
+
+
+<!-- html start -->
+<h1 class="centralText">პროდუქტები</h1>
+
+<div class="container">
+    <div class="row">   
+        <div class="products">
+            <!-- <div class="card">
+                 <img src="" alt="">
+                 <h2>სახელი</h2>
+                 <h2>კატეგორია</h2>
+                 <h2>ფასი:17.59ლ</h2>
+            </div> -->
+        </div>
+    </div>
+</div>
+
+
+<div class="loader">
+    <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+</div>
+<!-- html end -->
+
+
+
+
+
+
+<script>
+    $(".loader").show()
+
+
+    var productsDiv = document.querySelector(".products");
+    
+    function createCard(product){
+        let cardHTML = `
+            <div class="card">
+                 <img src="${product.image}" alt="">
+                 <h2>${product.title}</h2>
+                 <p>${product.category}</p>
+                 <h2>ფასი: ${product.price}ლ</h2>
+            </div>
+        `
+        return cardHTML;
+    }
+
+
+
+    
+    $.ajax({
+        type: "GET",
+        url: "https://fakestoreapi.com/products",
+        success: function (response) {
+           
+            for (const product of response) {
+                let card = createCard(product)
+
+                productsDiv.innerHTML += card;
+            }
+        },
+        complete: function(){
+            $(".loader").hide()
+        },
+        error: function(){
+            productsDiv.innerHTML = `<h1 class="centralText" style="color:red;">გვერდი ვერ მოიძებნა</h1>`
+        }
+    });
+</script>
